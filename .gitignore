@@ -1,0 +1,11 @@
+build/*
+*.elf
+*.dbg
+*.fx2
+*.sh
+*.a
+*~
+*.tags*
+*.workspace*
+*.bin
+
