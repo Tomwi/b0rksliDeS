@@ -35,7 +35,7 @@ BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int layer, s16* map)
 		fillScreen(tmp, 0, 0);
 		return tmp;
 	}
-	return tmp; //return the map to prevent memory l33ks
+	return NULL;
 }
 
 void scroll(int xo, int yo, int dx, int dy, BG_INF* inf)
