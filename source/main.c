@@ -28,14 +28,12 @@ int main()
 	initPlayer();
 	
 	u16* map = loadMap("level0.bks");
-	checkCollision(0,0,0,0, map);
 	
 	while(1) {
 		FeOS_WaitForVBlank();
 		readInput();
 		updateScroll(level);
 		updatePlayer(map);
-		
 	}
 	return 0;
 }
