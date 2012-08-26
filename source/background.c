@@ -33,6 +33,7 @@ BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int layer, s16* map)
 	return NULL;
 }
 
+
 void scroll(int xo, int yo, int dx, int dy, BG_INF* inf)
 {
 	int i;

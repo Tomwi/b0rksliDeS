@@ -4,21 +4,21 @@
 
 #include "b0rkwin.h"
 
-//#define DEBUG
-
 #ifdef DEBUG
 #include <stdio.h>
 #endif
 
+#define B0RKWIN_WIDTH	(32)
+#define B0RKWIN_HEIGHT	(32) 
+
 OBJECT b0rkwin = {
-	32,32,0,0
+	B0RKWIN_WIDTH,B0RKWIN_HEIGHT,0,0
 };
 
 /*
  * TODO: PHYSICS as the current gravity is just crap
  */
 #define GRAVITY (2)
-
 
 void initPlayer(void)
 {
@@ -58,4 +58,8 @@ void updatePlayer(u16* map)
 	}
 
 	setSprXY(0, b0rkwin.x, b0rkwin.y, TOP_SCREEN);
+}
+
+void deinitPlayer(void){
+	
 }

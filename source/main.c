@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "audio.h"
 #include "background.h"
 #include "input.h"
 #include "map.h"
@@ -28,12 +29,17 @@ int main()
 	initPlayer();
 	
 	u16* map = loadMap("level0.bks");
-	
+	initAudio();
 	while(1) {
 		FeOS_WaitForVBlank();
 		readInput();
+		if(keysPres & KEY_START)
+			break;
 		updateScroll(level);
 		updatePlayer(map);
 	}
+	deinitAudio();
+	free(map);
+	
 	return 0;
 }
