@@ -6,6 +6,8 @@ typedef struct BG_INF {
 	void * vram_map;	
 	int mapwidth;
 	int bgId;
+	int bgx;
+	int bgy;
 } BG_INF;
 
 /* ASM */
@@ -16,6 +18,6 @@ void t_copyColumn(BG_INF*, int, int);
 /* C */
 void fillScreen(BG_INF*, int, int);
 BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int layer, s16* map);
-void updateScroll(BG_INF*);
+
 
 #endif

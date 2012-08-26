@@ -7,7 +7,6 @@
 
 #define TILE_SIZE (8)
 
-int bgx, bgy;
 int freeVIDX, freeBYT;
 
 void fillScreen(BG_INF* inf, int tx, int ty)
@@ -20,17 +19,23 @@ void fillScreen(BG_INF* inf, int tx, int ty)
 BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int layer, s16* map)
 {
 	BG_INF* tmp;
-	if((tmp = malloc(sizeof(BG_INF)))) {
+	tmp = malloc(sizeof(BG_INF));
+	if( tmp == NULL ){
+		free(tmp);
+		return NULL;
+	} else {
 		tmp->bgId = bgInit(layer, BgType_Text8bpp, BgSize_T_512x256, 0,1);
 		dmaCopy(tiles, bgGetGfxPtr(tmp->bgId), tileSz);
 		dmaCopy(pal, BG_PALETTE, 256*2);
 		tmp->vram_map 	= bgGetMapPtr(tmp->bgId);
 		tmp->map 		= map;
 		tmp->mapwidth	= width;
+		tmp->bgx 		= 0;
+		tmp->bgy		= 0;
 		fillScreen(tmp, 0, 0);
 		return tmp;
 	}
-	return NULL;
+	return tmp; //return the map to prevent memory l33ks
 }
 
 void scroll(int xo, int yo, int dx, int dy, BG_INF* inf)
@@ -61,20 +66,4 @@ void scroll(int xo, int yo, int dx, int dy, BG_INF* inf)
 
 }
 
-void updateScroll(BG_INF* inf)
-{
-	int dx = 0, dy = 0;
-	if(keysHold & KEY_RIGHT)
-		dx = 1;
-	else if(keysHold & KEY_LEFT)
-		dx = -1;
-	if(keysHold & KEY_UP)
-		dy = -1;
-	else if(keysHold & KEY_DOWN)
-		dy = 1;
-	scroll(bgx, bgy, dx, dy, inf);
-	bgx+= dx;
-	bgy+= dy;
-	bgSetScroll (inf->bgId, bgx, bgy);
-	bgUpdate();
-}
+
