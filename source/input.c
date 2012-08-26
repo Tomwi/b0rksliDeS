@@ -16,13 +16,13 @@ void parseInput(int* dx, int* dy){
 	*dx = 0;
 	*dy = 0;
 	if(keysHold & KEY_RIGHT){ 
-		*dx = 1;}
+		*dx = bork_speed;}
 	else if(keysHold & KEY_LEFT){
-		*dx = -1;}
+		*dx = -1*bork_speed;}
 			
 	
 	if(keysHold & KEY_UP)
-		*dy = -1;
+		*dy = -1*bork_speed;
 	else if(keysHold & KEY_DOWN)
-		*dy = 1;
+		*dy = bork_speed;
 }

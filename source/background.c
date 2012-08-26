@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "background.h"
-#include "input.h"
 
 #define TILE_SIZE (8)
 

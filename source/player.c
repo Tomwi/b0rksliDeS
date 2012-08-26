@@ -36,10 +36,11 @@ void updatePlayer(u16* map,int dx, int dy)
 	
 	int val = checkMapCollision(&b0rkwin, 0, GRAVITY, map);
 	if(!val) {
-#ifdef DEBUG
+#ifdef DEBUGif
 		printf("No collision\n");
 #endif
 		b0rkwin.y+= GRAVITY;
+		b0rkwin.x+=dx;
 	}
 	/* align the b0rkwin */
 	else {
@@ -58,6 +59,16 @@ void updatePlayer(u16* map,int dx, int dy)
 		if(val & L_COLLISION)
 			printf("Left collision\n");
 #endif
+		if(dx<0){
+			if( !(val & L_COLLISION))
+				b0rkwin.x+=dx;
+		} else if(dx>0){
+			if( !(val & R_COLLISION))
+				b0rkwin.x+=dx;
+		}
+		
+		
+		
 	}
 	
 

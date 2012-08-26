@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "background.h"
-#include "input.h"
+
 #include "map.h"
 #include "sprite.h"
 #include "player.h"
