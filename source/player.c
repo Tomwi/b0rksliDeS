@@ -31,8 +31,7 @@ void initPlayer(void)
 
 void updatePlayer(u16* map,int dx, int dy)
 {
-	b0rkwin.x+=dx;
-	b0rkwin.y+=dy;
+	
 	
 	int val = checkMapCollision(&b0rkwin, 0, GRAVITY, map);
 	if(!val) {
@@ -66,7 +65,13 @@ void updatePlayer(u16* map,int dx, int dy)
 			if( !(val & R_COLLISION))
 				b0rkwin.x+=dx;
 		}
-		
+		if(dy<0){
+			if( !(val & D_COLLISION))
+				b0rkwin.y+=dy;
+		} else if(dy>0){
+			if( !(val & U_COLLISION))
+				b0rkwin.y+=dy;
+		}
 		
 		
 	}
