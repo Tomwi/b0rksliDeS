@@ -1,0 +1,8 @@
+COMPILATION:
+
+In order to compile b0rksliDeS make sure that you have the FeOS sdk installed
+and that you have the following userlibs installed:
+
+-Maxmod for FeOS
+
+
