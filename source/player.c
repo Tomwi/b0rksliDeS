@@ -1,8 +1,7 @@
 #include <sprite.h>
+#include "file.h"
 #include "player.h"
 #include "collision.h"
-
-#include "b0rkwin.h"
 
 #ifdef DEBUG
 #include <stdio.h>
@@ -15,6 +14,8 @@ OBJECT b0rkwin = {
 	B0RKWIN_WIDTH,B0RKWIN_HEIGHT,0,0
 };
 
+#define B0RKWIN_PAL "b0rkwin.pal.bin"
+#define B0RKWIN_GFX "b0rkwin.img.bin"
 /*
  * TODO: PHYSICS as the current gravity is just crap
  */
@@ -22,8 +23,16 @@ OBJECT b0rkwin = {
 
 void initPlayer(void)
 {
-	loadPalette(0, (void*)b0rkwinPal, false, TOP_SCREEN);
-	hword_t * b0rkwinFrame = loadFrame((hword_t*)b0rkwinTiles, SpriteColorFormat_256Color, SpriteSize_32x32, 0, TOP_SCREEN);
+	int size;
+	void* pal = bufferFile(B0RKWIN_PAL, &size);
+	if(pal)
+		loadPalette(0, (void*)pal, false, TOP_SCREEN);
+	free(pal);
+	void* gfx = bufferFile(B0RKWIN_GFX, &size);
+	hword_t * b0rkwinFrame = NULL;
+	if(gfx)
+		b0rkwinFrame = loadFrame(gfx, SpriteColorFormat_256Color, SpriteSize_32x32, 0, TOP_SCREEN);
+	free(gfx);
 	initSprite(0, 0, oamGfxPtrToOffset(states(TOP_SCREEN), b0rkwinFrame), SpriteSize_32x32, SpriteColorFormat_256Color, TOP_SCREEN);
 	setSprXY(0, b0rkwin.x, b0rkwin.y, TOP_SCREEN);
 	setSpriteVisiblity(false, 0, TOP_SCREEN);

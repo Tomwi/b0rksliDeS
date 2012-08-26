@@ -6,13 +6,16 @@
 #include "background.h"
 #include "input.h"
 #include "map.h"
+#include "file.h"
 #include "sprite.h"
 #include "player.h"
 
-#include "level0.h"
-
-
 BG_INF* level;
+
+/* TODO: add a clean way to load levels */
+#define LEVEL0_PAL "level0.pal.bin"
+#define LEVEL0_GFX "level0.img.bin"
+#define LEVEL0_MAP "level0.map.bin"
 
 int main()
 {
@@ -24,8 +27,16 @@ int main()
 	
 	oamEnable(states(TOP_SCREEN));
 	oamInit(states(TOP_SCREEN), SpriteMapping_1D_128, false);
+	int tileSize = 0;
+	int mapSize = 0;
+	void* tiles 	=  bufferFile(LEVEL0_GFX , &tileSize);
+	void* pal 		=  bufferFile(LEVEL0_PAL , &mapSize);
+	void* tileMap 	=  bufferFile(LEVEL0_MAP , &mapSize);
+	if(tiles && pal && tileMap)
+	level = initBg(tiles, tileSize, pal, 32, 0, tileMap);
+	free(tiles);
+	free(pal);
 	
-	level = initBg((s16*)level0Tiles, level0TilesLen, (s16*)level0Pal, 32, 0, (s16*)level0Map);
 	initPlayer();
 	
 	u16* map = loadMap("level0.bks");
@@ -40,6 +51,7 @@ int main()
 	}
 	deinitAudio();
 	free(map);
+	free(tileMap);
 	
 	return 0;
 }
