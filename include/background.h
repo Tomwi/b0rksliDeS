@@ -18,6 +18,6 @@ void t_copyColumn(BG_INF*, int, int);
 /* C */
 void fillScreen(BG_INF*, int, int);
 BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int layer, s16* map);
-
+void updateScroll(BG_INF* inf, int dx, int dy);
 
 #endif

@@ -10,7 +10,6 @@ void readInput(void){
 	keysHold = keysHeld();
 	keysPres = keysDown();
 	keysReleased = keysUp();
-	
 }
 
 void parseInput(int* dx, int* dy){
@@ -26,7 +25,4 @@ void parseInput(int* dx, int* dy){
 		*dy = -1;
 	else if(keysHold & KEY_DOWN)
 		*dy = 1;
-		
-	
-	
 }

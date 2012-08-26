@@ -7,7 +7,6 @@
 #include "map.h"
 #include "sprite.h"
 #include "player.h"
-#include "camera.h"
 
 #include "level0.h"
 
@@ -29,7 +28,6 @@ int main()
 	initPlayer();
 	
 	u16* map = loadMap("level0.bks");
-	checkCollision(0,0,0,0, map);
 	int dx,dy;
 	while(1) {
 		FeOS_WaitForVBlank();
@@ -37,8 +35,6 @@ int main()
 		parseInput(&dx,&dy);
 		updateScroll(level,dx,dy);
 		updatePlayer(map,dx,dy);
-		
 	}
-	free(level);
 	return 0;
 }
