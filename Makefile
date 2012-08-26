@@ -25,18 +25,20 @@ FEOSMK = $(FEOSSDK)/mk
 #---------------------------------------------------------------------------------
 TARGET        := $(shell basename $(CURDIR))
 BUILD         := build
-SOURCES       := source 
+SOURCES       := source
 DATA          := data
 INCLUDES      := include
-MAPS		  := maps
+MAPS	      := maps
+MANIFEST      := package.manifest
+PACKAGENAME   := $(TARGET)
 
-DEFARCH		:= -marm
-CONF_USERLIBS = 
-CONF_LIBS = 
 CONF_DEFINES =
 
 include $(FEOSMK)/app.mk
+include $(FEOSMK)/package.mk
 
 install: all
-	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2 || exit 1
+	@mkdir -p $(FEOSDEST)/data/FeOS/bin
+	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2
 	@cp $(MAPS)/level0.bks $(FEOSDEST)/level0.bks || exit 1
+

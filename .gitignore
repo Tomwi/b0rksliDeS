@@ -8,4 +8,4 @@ build/*
 *.tags*
 *.workspace*
 *.bin
-
+*.fpkg
