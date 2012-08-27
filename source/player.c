@@ -25,18 +25,31 @@ int b0rkwinCol(int mask, int inX, int inY)
 	/* Align the b0rkwin to the surface */
 	if(b0rkwin.dy) {
 		if(mask & ( U_COLLISION | D_COLLISION )) {
+
 			b0rkwin.y += inY;
-			b0rkwin.y &= (~0xF);
+			// align to the upper tile
+			if(mask & D_COLLISION)
+				b0rkwin.y &= (~0xF);
+			// align to the lower tile
+			else
+				b0rkwin.y += (16-(b0rkwin.y&0xF));
 			b0rkwin.dy = 0;
 		}
 	}
+	/* Take care of the b0rkwins head: it should not smash through a wall */
 	if(b0rkwin.dx) {
-		if(mask & (R_COLLISION | L_COLLISION)) {
-			b0rkwin.x += inX;
-			b0rkwin.x &= (~0xF);
+		if(mask & ( R_COLLISION | L_COLLISION)) {
+			b0rkwin.x += (inX <= b0rkwin.dx ? inX : b0rkwin.dx);
+			// go down (align to the left)
+			if(mask & R_COLLISION)
+				b0rkwin.x &= (~0xF);
+			// go up (align to the the right)
+			else
+				b0rkwin.x += (16-(b0rkwin.x&0xF));
 			b0rkwin.dx = 0;
 		}
 	}
+	// we should be properly aligned by now, stop collision checking
 	if(!b0rkwin.dx && !b0rkwin.dy)
 		return 1;
 	return 0;

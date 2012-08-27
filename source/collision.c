@@ -39,9 +39,9 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 		int cx = x + ((toHor*i)/toCheck)*COLTILE_SZ;
 		int tile = getTile(cx/COLTILE_SZ, cy/COLTILE_SZ, lvl->hdr.width);
 		if(obj->dx) {
-			int add = -1;
+			int add = 0;
 			if(obj->dx > 0)
-				add = obj->width/COLTILE_SZ;
+				add = obj->width/COLTILE_SZ-1;
 			int i;
 			for(i=0; i<obj->height/COLTILE_SZ; i++) {
 				if(lvl->colMap[tile+add+lvl->hdr.width*i] & (L_COLLISION | R_COLLISION )) {
