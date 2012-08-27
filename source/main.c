@@ -52,6 +52,7 @@ int main()
 			break;
 		updatePlayer(lvl);
 	}
+	FeOS_ConsoleMode();
 	deinitAudio();
 	freeLevel(lvl);
 	

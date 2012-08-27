@@ -15,7 +15,7 @@ Copyright: 2012 Tomwi
 ; Dependencies are a comma-delimited package list. Minimum versions (optional)
 ; can be specified with the (>= versionnumber) syntax.
 
-;Depends: somelib1, somelib2 (>= 1.1)
+Depends: maxmod
 
 ; The license can be one of the following:
 ; MIT/Simplified-BSD/ISC/WTFPL/Unlicense/GPLv2/GPLv3/LGPLv2/LGPLv3

@@ -48,17 +48,19 @@ CONF_SNDBNKNAME = soundbank
 
 SNDBNK   := $(CURDIR)/$(CONF_SNDBNKFOLDER)/$(CONF_SNDBNKNAME).bin
 SNDBNK_H := $(CURDIR)/$(CONF_SNDBNKHFOLDER)/$(CONF_SNDBNKNAME).h
-CONF_PREREQUISITES = $(SNDBNK)
+CONF_PREREQUISITES = $(SNDBNK) convert
 CONF_EXTRACLEAN += $(SNDBNK) $(SNDBNK_H)
 
 AUDIOFILES := $(wildcard $(CURDIR)/$(AUDIO)/*.*)
 
 include $(FEOSMK)/app.mk
-#include $(FEOSMK)/package.mk
+include $(FEOSMK)/package.mk
 
-install: all convert
-	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2 || exit 1
-	@cp $(MAPS)/level0.bks $(FEOSDEST)/level0.bks || exit 1
+install: all
+	@mkdir -p $(FEOSDEST)/data/FeOS/bin
+	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2
+	@cp $(MAPS)/level0.bks $(FEOSDEST)/level0.bks
+
 $(SNDBNK): $(AUDIOFILES)
 	@echo Building soundbank...
 	@[ -d $(CONF_SNDBNKFOLDER) ] || mkdir -p $(CONF_SNDBNKFOLDER)
@@ -67,5 +69,6 @@ $(SNDBNK): $(AUDIOFILES)
 	
 convert: $(IMGBINS)
 	@cp $(GFX)/*.bin fs
+
 $(IMGBINS) : %.img.bin : $(GFX)/%.png $(GFX)/%.grit
 	@$(GRIT) $< -ftb -fh! -o$(CURDIR)/gfx/$*
