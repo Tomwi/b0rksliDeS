@@ -27,6 +27,8 @@ BG_INF* initBg(s16* tiles, int tileSz, s16* pal, int width, int height, int laye
 		tmp->map 		= map;
 		tmp->mapwidth	= width;
 		tmp->mapHeight  = height;
+		tmp->x			= 0;
+		tmp->y			= 0;
 		fillScreen(tmp, 0, 0);
 		return tmp;
 	}
