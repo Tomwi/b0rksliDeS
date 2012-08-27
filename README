@@ -5,4 +5,14 @@ and that you have the following userlibs installed:
 
 -Maxmod for FeOS
 
+TODO:
+
+- add the b0rk0meter (measures speed)
+- add a title screen
+- implement GRF loading
+- slope collision
+- slipperyness on ice
+- weather (snow, sun, moon?)
+- AI
+
 
