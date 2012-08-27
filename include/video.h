@@ -4,4 +4,7 @@
 #define SUB_SCREEN (0)
 #define TOP_SCREEN (1)
 
+#define SCREEN_WIDTH 	(256)
+#define SCREEN_HEIGHT 	(192)
+
 #endif

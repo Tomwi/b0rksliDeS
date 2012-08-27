@@ -4,18 +4,18 @@
 
 #include "audio.h"
 #include "background.h"
+#include "camera.h"
 #include "input.h"
-#include "map.h"
+#include "level.h"
 #include "file.h"
 #include "sprite.h"
 #include "player.h"
 
 BG_INF* level;
 
-/* TODO: add a clean way to load levels */
 #define LEVEL0_PAL "level0.pal.bin"
 #define LEVEL0_GFX "level0.img.bin"
-#define LEVEL0_MAP "level0.map.bin"
+
 
 int main()
 {
@@ -27,31 +27,33 @@ int main()
 	
 	oamEnable(states(TOP_SCREEN));
 	oamInit(states(TOP_SCREEN), SpriteMapping_1D_128, false);
+	
+	LEVEL* lvl = loadLevel("level0.bks");
+	
 	int tileSize = 0;
-	int mapSize = 0;
+	int palSize = 0;
 	void* tiles 	=  bufferFile(LEVEL0_GFX , &tileSize);
-	void* pal 		=  bufferFile(LEVEL0_PAL , &mapSize);
-	void* tileMap 	=  bufferFile(LEVEL0_MAP , &mapSize);
-	if(tiles && pal && tileMap)
-	level = initBg(tiles, tileSize, pal, 32, 0, tileMap);
+	void* pal 		=  bufferFile(LEVEL0_PAL , &palSize);
+
+	if(tiles && pal)
+	level = initBg(tiles, tileSize, pal, lvl->hdr.width*2, lvl->hdr.height*2, 0, lvl->tileMap);
+
 	free(tiles);
 	free(pal);
 	
 	initPlayer();
-	
-	u16* map = loadMap("level0.bks");
 	initAudio();
+	
 	while(1) {
 		FeOS_WaitForVBlank();
+		updateCamera(&b0rkwin, level);
 		readInput();
 		if(keysPres & KEY_START)
 			break;
-		updateScroll(level);
-		updatePlayer(map);
+		updatePlayer(lvl);
 	}
 	deinitAudio();
-	free(map);
-	free(tileMap);
+	freeLevel(lvl);
 	
 	return 0;
 }

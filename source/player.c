@@ -2,24 +2,45 @@
 #include "file.h"
 #include "player.h"
 #include "collision.h"
+#include "input.h"
 
 #ifdef DEBUG
 #include <stdio.h>
 #endif
 
-#define B0RKWIN_WIDTH	(32)
-#define B0RKWIN_HEIGHT	(32) 
-
 OBJECT b0rkwin = {
-	B0RKWIN_WIDTH,B0RKWIN_HEIGHT,0,0
+	B0RKWIN_WIDTH,B0RKWIN_HEIGHT
 };
 
+#define B0RK_SPEED (3)
 #define B0RKWIN_PAL "b0rkwin.pal.bin"
 #define B0RKWIN_GFX "b0rkwin.img.bin"
 /*
  * TODO: PHYSICS as the current gravity is just crap
  */
-#define GRAVITY (2)
+#define GRAVITY (4)
+
+int b0rkwinCol(int mask, int inX, int inY)
+{
+	/* Align the b0rkwin to the surface */
+	if(b0rkwin.dy) {
+		if(mask & ( U_COLLISION | D_COLLISION )) {
+			b0rkwin.y += inY;
+			b0rkwin.y &= (~0xF);
+			b0rkwin.dy = 0;
+		}
+	}
+	if(b0rkwin.dx) {
+		if(mask & (R_COLLISION | L_COLLISION)) {
+			b0rkwin.x += inX;
+			b0rkwin.x &= (~0xF);
+			b0rkwin.dx = 0;
+		}
+	}
+	if(!b0rkwin.dx && !b0rkwin.dy)
+		return 1;
+	return 0;
+}
 
 void initPlayer(void)
 {
@@ -36,39 +57,37 @@ void initPlayer(void)
 	initSprite(0, 0, oamGfxPtrToOffset(states(TOP_SCREEN), b0rkwinFrame), SpriteSize_32x32, SpriteColorFormat_256Color, TOP_SCREEN);
 	setSprXY(0, b0rkwin.x, b0rkwin.y, TOP_SCREEN);
 	setSpriteVisiblity(false, 0, TOP_SCREEN);
+	b0rkwin.collCallback = b0rkwinCol;
 }
 
-void updatePlayer(u16* map)
+void updatePlayer(LEVEL* lvl)
 {
-	int val = checkMapCollision(&b0rkwin, 0, GRAVITY, map);
-	if(!val) {
-#ifdef DEBUG
-		printf("No collision\n");
-#endif
-		b0rkwin.y+= GRAVITY;
-	}
-	/* align the b0rkwin */
-	else {
-		/* Not aligned */
-		if(b0rkwin.y % 16 != 15) {
-			b0rkwin.y += (15-(b0rkwin.y%16));
-		}
-#ifdef DEBUG
-		printf("Coordinaten: %d,%d\n", b0rkwin.x, b0rkwin.y);
-		if(val & D_COLLISION)
-			printf("Down collision\n");
-		if(val & U_COLLISION)
-			printf("Up collision\n");
-		if(val & R_COLLISION)
-			printf("Right collision\n");
-		if(val & L_COLLISION)
-			printf("Left collision\n");
-#endif
+
+	int val = checkMapCollision(&b0rkwin, lvl);
+	b0rkwin.y += b0rkwin.dy;
+	b0rkwin.x += b0rkwin.dx;
+
+	if(!(val&D_COLLISION)) {
+		b0rkwin.dy+=GRAVITY;
 	}
 
-	setSprXY(0, b0rkwin.x, b0rkwin.y, TOP_SCREEN);
+	if(!(val&R_COLLISION)) {
+		if(keysHold & KEY_RIGHT) {
+			if(b0rkwin.dx < B0RK_SPEED)
+				b0rkwin.dx ++;
+		}
+	}
+
+	if(!(val&L_COLLISION)) {
+		if(keysHold & KEY_LEFT) {
+			if(b0rkwin.dx > -B0RK_SPEED)
+				b0rkwin.dx --;
+		}
+	}
+
 }
 
-void deinitPlayer(void){
-	
+void deinitPlayer(void)
+{
+
 }
