@@ -18,34 +18,19 @@ OBJECT b0rkwin = {
 /*
  * TODO: PHYSICS as the current gravity is just crap
  */
-#define GRAVITY (4)
+#define GRAVITY (1)
 
 int b0rkwinCol(int mask, int inX, int inY)
 {
-	/* Align the b0rkwin to the surface */
 	if(b0rkwin.dy) {
 		if(mask & ( U_COLLISION | D_COLLISION )) {
-
 			b0rkwin.y += inY;
-			// align to the upper tile
-			if(mask & D_COLLISION)
-				b0rkwin.y &= (~0xF);
-			// align to the lower tile
-			else
-				b0rkwin.y += (16-(b0rkwin.y&0xF));
 			b0rkwin.dy = 0;
 		}
 	}
-	/* Take care of the b0rkwins head: it should not smash through a wall */
 	if(b0rkwin.dx) {
 		if(mask & ( R_COLLISION | L_COLLISION)) {
-			b0rkwin.x += (inX <= b0rkwin.dx ? inX : b0rkwin.dx);
-			// go down (align to the left)
-			if(mask & R_COLLISION)
-				b0rkwin.x &= (~0xF);
-			// go up (align to the the right)
-			else
-				b0rkwin.x += (16-(b0rkwin.x&0xF));
+			b0rkwin.x += inX;
 			b0rkwin.dx = 0;
 		}
 	}
@@ -65,7 +50,7 @@ void initPlayer(void)
 	void* gfx = bufferFile(B0RKWIN_GFX, &size);
 	hword_t * b0rkwinFrame = NULL;
 	if(gfx)
-		b0rkwinFrame = loadFrame(gfx, SpriteColorFormat_256Color, SpriteSize_32x32, 0, TOP_SCREEN);
+	b0rkwinFrame = loadFrame(gfx, SpriteColorFormat_256Color, SpriteSize_32x32, 0, TOP_SCREEN);
 	free(gfx);
 	initSprite(0, 0, oamGfxPtrToOffset(states(TOP_SCREEN), b0rkwinFrame), SpriteSize_32x32, SpriteColorFormat_256Color, TOP_SCREEN);
 	setSprXY(0, b0rkwin.x, b0rkwin.y, TOP_SCREEN);
