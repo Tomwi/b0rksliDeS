@@ -51,7 +51,10 @@ void scroll(int xo, int yo, int dx, int dy, BG_INF* inf)
 			t_copyColumn(inf, (xo/TILE_SIZE)+i+32, (yo+dy)/TILE_SIZE);
 	}
 	int toCopyY = (yo+dy)/TILE_SIZE - (yo/TILE_SIZE);
-	int copyLen = 33-(toCopyX >= 0 ? toCopyX : -toCopyX);
+	/* Don't copy less when we're going left -> would need another starting offset
+	 * (Maybe a TODO to add that in the asm code?
+	 */
+	int copyLen = 33-(toCopyX >= 0 ? toCopyX : 0);
 	if(copyLen) {
 		if(toCopyY < 0) {
 			for(i=-1; i>=toCopyY; i--)
