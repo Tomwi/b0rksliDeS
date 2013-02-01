@@ -72,17 +72,22 @@ check:
 
 					/* Prevent the collision system detecting horizontal collision whereas
 					 * these tiles can't be reached due to a vertical collision */
-					int val = lvl->colMap[tile+add+lvl->hdr.width*j];
-					if(val & (D_COLLISION | U_COLLISION)) {
-						printf("val %d\n", val);
-						if((obj->dy > 0 && (val & D_COLLISION)) || (obj->dy < 0 && (val & U_COLLISION))){
-						if(cy/COLTILE_SZ != y/COLTILE_SZ) {
-								printf("REJECTED!\n");
+					int tmp = lvl->colMap[tile+add+lvl->hdr.width*j];
+					if(obj->dy > 0){
+						if(j == (k-1))
+						{
+							if(tmp & D_COLLISION)
 								break;
-							}
-
+						}
+							
+					}
+					if(obj->dy < 0){
+						if(j == 0){
+							if(tmp & U_COLLISION)
+								break;
 						}
 					}
+					
 					val |= (obj->dx > 0 ? R_COLLISION : L_COLLISION );
 					if(val) {
 						int inX = cx-x;
