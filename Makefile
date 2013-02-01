@@ -32,7 +32,7 @@ AUDIO         := audio
 GFX			  := gfx
 MAPS	      := maps
 MANIFEST      := package.manifest
-PACKAGENAME   := $(TARGET)
+PACKAGENAME   := b0rkslides
 
 PNGFILES	:= $(foreach dir, $(GFX),$(notdir $(wildcard $(dir)/*.png)))
 IMGBINS		:= $(PNGFILES:.png=.img.bin)
@@ -60,11 +60,13 @@ install: all
 	@mkdir -p $(FEOSDEST)/data/FeOS/bin
 	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2
 	@cp $(MAPS)/level0.bks $(FEOSDEST)/level0.bks
+	@grit apptile.png -ftr -fh! -gb -gB16 -gT! -gzl -p! -o $(FEOSDEST)/data/FeOS/gui/$(TARGET).grf
+	@fmantool application.manifest $(FEOSDEST)/data/FeOS/gui/$(TARGET).app
 
 $(SNDBNK): $(AUDIOFILES)
 	@echo Building soundbank...
-	@[ -d $(CONF_SNDBNKFOLDER) ] || mkdir -p $(CONF_SNDBNKFOLDER)
-	@[ -d $(CONF_SNDBNKHFOLDER) ] || mkdir -p $(CONF_SNDBNKHFOLDER)
+	@mkdir -p $(CONF_SNDBNKFOLDER)
+	@mkdir -p $(CONF_SNDBNKHFOLDER)
 	@mmutil $^ -d -o$(SNDBNK) -h$(SNDBNK_H)
 	
 convert: $(IMGBINS)
