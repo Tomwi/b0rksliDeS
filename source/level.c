@@ -35,6 +35,8 @@ LEVEL* loadLevel(const char* name)
 	tmp->tileMap = &tmp->colMap[numMapEntries];
 	fread(tmp->colMap, 1, numMapEntries*sizeof(u16)*5, fp);
 	fclose(fp);
+	int trol = getTile(9, 3, 32);
+	printf("interesting values: %d, %d, %d", tmp->colMap[trol], tmp->colMap[trol+32], tmp->colMap[trol+64]);
 	return tmp;
 error:
 	freeLevel(tmp);

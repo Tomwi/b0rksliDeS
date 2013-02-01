@@ -18,23 +18,21 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 	/* If you don't clamp it will b9rk at the edges */
 	CLAMP(obj->x, 0, (lvl->hdr.width*COLTILE_SZ-32));
 	CLAMP(obj->dx, 0-obj->x, ((lvl->hdr.width)*COLTILE_SZ-32-obj->x));
-	
+
 	CLAMP(obj->y,  0, (lvl->hdr.height*COLTILE_SZ-32));
 	CLAMP(obj->dy, 0-obj->y, ((lvl->hdr.height)*COLTILE_SZ-32-obj->y));
-	
-	
+
+
 	int x = obj->x;
 	int y = obj->y;
-	
+
 	int toHor = 0;
 	int toVer = 0;
-	
-	if(obj->dx < 0)
+
+	if(obj->dx < 0) {
 		toHor = (x + obj->dx) / COLTILE_SZ - ( x/COLTILE_SZ);
-	else{
-		
+	} else {
 		toHor = ((( x + (COLTILE_SZ-1)) % COLTILE_SZ ) + obj->dx ) / COLTILE_SZ;
-		
 	}
 	if(obj->dy < 0)
 		toVer = (y + obj->dy) / COLTILE_SZ - ( y/COLTILE_SZ);
@@ -45,16 +43,16 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 		return 0;
 
 	int i, val = 0;
-	check:
+check:
 	for(i=1; i<=toCheck; i++) {
-		
+
 		/* Calculate where the left top of the obj  would be located
 		when a collision occurs */
 		int x = obj->x;
 		int y = obj->y;
 		int cy = ((y/COLTILE_SZ)*COLTILE_SZ + ((toVer*i)/toCheck)*COLTILE_SZ);
 		int cx = ((x/COLTILE_SZ)*COLTILE_SZ + ((toHor*i)/toCheck)*COLTILE_SZ);
-		
+
 		int tile = getTile(cx/COLTILE_SZ, cy/COLTILE_SZ, lvl->hdr.width);
 
 		if(obj->dx) {
@@ -68,11 +66,22 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 			}
 			int j, k = 2 +  ((obj->y % COLTILE_SZ)? 1 : 0);
 			for(j=0; j<k; j++) {
+				
 				if(lvl->colMap[tile+add+lvl->hdr.width*j] & (L_COLLISION | R_COLLISION)) {
+					printf("ZOMG %d\n", lvl->colMap[tile+add+lvl->hdr.width*j]);
+
 					/* Prevent the collision system detecting horizontal collision whereas
 					 * these tiles can't be reached due to a vertical collision */
-					if(lvl->colMap[tile+add+lvl->hdr.width*j]& (D_COLLISION | U_COLLISION)){
-						break;
+					int val = lvl->colMap[tile+add+lvl->hdr.width*j];
+					if(val & (D_COLLISION | U_COLLISION)) {
+						printf("val %d\n", val);
+						if((obj->dy > 0 && (val & D_COLLISION)) || (obj->dy < 0 && (val & U_COLLISION))){
+						if(cy/COLTILE_SZ != y/COLTILE_SZ) {
+								printf("REJECTED!\n");
+								break;
+							}
+
+						}
 					}
 					val |= (obj->dx > 0 ? R_COLLISION : L_COLLISION );
 					if(val) {
@@ -85,7 +94,7 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 						}
 						if(obj->collCallback((val&(L_COLLISION | R_COLLISION)), inX, cy-y))
 							return val;
-						else{
+						else {
 							toHor = 0;
 							cy = ((obj->y/COLTILE_SZ)*COLTILE_SZ + ((toVer*i)/toCheck)*COLTILE_SZ);
 							cx = ((obj->x/COLTILE_SZ)*COLTILE_SZ);
@@ -118,13 +127,13 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 							if(y % COLTILE_SZ == 0)
 								inY -= COLTILE_SZ;
 						}
-						if(obj->collCallback((val&(U_COLLISION | D_COLLISION)), cx-x, inY)){
+						if(obj->collCallback((val&(U_COLLISION | D_COLLISION)), cx-x, inY)) {
 							return val;
 						}
 					}
 				}
 			}
 		}
-	}	
+	}
 	return val;
 }

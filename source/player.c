@@ -29,14 +29,18 @@ int b0rkwinCol(int mask, int inX, int inY)
 		if(mask & ( U_COLLISION | D_COLLISION )) {
 			b0rkwin.y += inY;
 			b0rkwin.dy = 0;
+			if(jumping && (mask & D_COLLISION))
+				jumping = 0;
 		}
 	}
 	if(b0rkwin.dx) {
 		if(mask & ( R_COLLISION | L_COLLISION)) {
-			printf("before %d, %d\n", b0rkwin.x, b0rkwin.y);
+			if(mask & L_COLLISION){
+				printf("hop %d\n", inX);
+			}
 			b0rkwin.x += inX;
 			b0rkwin.dx = 0;
-			printf("after %d, %d\n", b0rkwin.x, b0rkwin.y);
+			
 			
 		}
 	}
@@ -74,7 +78,7 @@ void initPlayer(void)
 void updatePlayer(LEVEL* lvl)
 {
 	val = checkMapCollision(&b0rkwin, lvl);
-	printf("b0rksition %d, %d\n", b0rkwin.x, b0rkwin.y);
+	printf("b0rksition %d, %d, %d, %d\n", b0rkwin.x, b0rkwin.y, b0rkwin.dx, b0rkwin.dy);
 	b0rkwin.y += b0rkwin.dy;
 	b0rkwin.x += b0rkwin.dx;
 	
@@ -90,14 +94,15 @@ void updatePlayer(LEVEL* lvl)
 				b0rkwin.dx --;
 	}
 	
-	if(keysPres & KEY_A) {
+	if(keysPres & KEY_A && !jumping) {
 		b0rkwin.dy = -12;
+		jumping = 1;
 	}
 	if(keysPres & KEY_B) {
-		b0rkwin.x = 449;
-		b0rkwin.y = 96;
-		b0rkwin.dx = 0;
-		b0rkwin.dy = 12;
+		b0rkwin.x = 162;
+		b0rkwin.y = 51;
+		b0rkwin.dx = -3;
+		b0rkwin.dy = -1;
 	}
 	
 }
