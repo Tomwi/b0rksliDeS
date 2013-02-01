@@ -18,7 +18,7 @@ int initAudio(void){
 	mmLoad(MOD_FLATOUTLIES);
 
 	// Start playing module
-	mmStart(MOD_FLATOUTLIES, MM_PLAY_LOOP);
+	//mmStart(MOD_FLATOUTLIES, MM_PLAY_LOOP);
 	return 1;
 }
 
