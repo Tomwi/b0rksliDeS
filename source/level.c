@@ -17,12 +17,6 @@ LEVEL* loadLevel(const char* name)
 		
 	fread(tmp, 1, sizeof(LEVEL_HDR), fp);
 	int numMapEntries = tmp->hdr.width*tmp->hdr.height;
-	#ifdef DEBUG
-	
-		printf("width & height; %d & %d\n", tmp->hdr.width, tmp->hdr.height);
-		printf("reading %d bytes\n", 0);
-	
-	#endif
 	/* Allocate the collision- and tilemap
 	 * The collision map uses 16x16 tiles, whereas the tilemap
 	 * uses 8x8. Map width and height are measured in 16x16 tiles.
@@ -35,8 +29,6 @@ LEVEL* loadLevel(const char* name)
 	tmp->tileMap = &tmp->colMap[numMapEntries];
 	fread(tmp->colMap, 1, numMapEntries*sizeof(u16)*5, fp);
 	fclose(fp);
-	int trol = getTile(9, 3, 32);
-	printf("interesting values: %d, %d, %d", tmp->colMap[trol], tmp->colMap[trol+32], tmp->colMap[trol+64]);
 	return tmp;
 error:
 	freeLevel(tmp);

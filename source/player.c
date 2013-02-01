@@ -35,13 +35,8 @@ int b0rkwinCol(int mask, int inX, int inY)
 	}
 	if(b0rkwin.dx) {
 		if(mask & ( R_COLLISION | L_COLLISION)) {
-			if(mask & L_COLLISION){
-				printf("hop %d\n", inX);
-			}
 			b0rkwin.x += inX;
 			b0rkwin.dx = 0;
-			
-			
 		}
 	}
 	// we should be properly aligned by now, stop collision checking
@@ -78,7 +73,6 @@ void initPlayer(void)
 void updatePlayer(LEVEL* lvl)
 {
 	val = checkMapCollision(&b0rkwin, lvl);
-	printf("b0rksition %d, %d, %d, %d\n", b0rkwin.x, b0rkwin.y, b0rkwin.dx, b0rkwin.dy);
 	b0rkwin.y += b0rkwin.dy;
 	b0rkwin.x += b0rkwin.dx;
 	
@@ -98,13 +92,6 @@ void updatePlayer(LEVEL* lvl)
 		b0rkwin.dy = -12;
 		jumping = 1;
 	}
-	if(keysPres & KEY_B) {
-		b0rkwin.x = 162;
-		b0rkwin.y = 51;
-		b0rkwin.dx = -3;
-		b0rkwin.dy = -1;
-	}
-	
 }
 
 void deinitPlayer(void)

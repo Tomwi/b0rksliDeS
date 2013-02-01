@@ -3,9 +3,7 @@
 #include <stdio.h>
 
 #include "collision.h"
-extern int jumping;
-
-#define CLAMP(n,l,u) ((n) = ((n) > (u) ? (u) : ((n)<(l) ? (l) : (n))))
+#include "b0rk.h"
 
 inline int getTile(int x, int y, int width)
 {
@@ -43,7 +41,7 @@ int checkMapCollision(OBJECT* obj, LEVEL* lvl)
 		return 0;
 
 	int i, val = 0;
-check:
+
 	for(i=1; i<=toCheck; i++) {
 
 		/* Calculate where the left top of the obj  would be located
@@ -64,30 +62,23 @@ check:
 				if(x % COLTILE_SZ == 0)
 					add--;
 			}
-			int j, k = 2 +  ((obj->y % COLTILE_SZ)? 1 : 0);
+			int j, tmp, k = 2 +  ((obj->y % COLTILE_SZ)? 1 : 0);
 			for(j=0; j<k; j++) {
-				
-				if(lvl->colMap[tile+add+lvl->hdr.width*j] & (L_COLLISION | R_COLLISION)) {
-					printf("ZOMG %d\n", lvl->colMap[tile+add+lvl->hdr.width*j]);
-
-					/* Prevent the collision system detecting horizontal collision whereas
-					 * these tiles can't be reached due to a vertical collision */
-					int tmp = lvl->colMap[tile+add+lvl->hdr.width*j];
-					if(obj->dy > 0){
-						if(j == (k-1))
-						{
+				if((tmp = lvl->colMap[tile+add+lvl->hdr.width*j]) & (L_COLLISION | R_COLLISION)) {
+					/* No false alarm for horizontal colliding under the b0rkwin */
+					if(obj->dy > 0) {
+						if(j == (k-1)) {
 							if(tmp & D_COLLISION)
 								break;
 						}
-							
 					}
-					if(obj->dy < 0){
-						if(j == 0){
+					/* No false alarm for horizontal colliding above the b0rkwin */
+					if(obj->dy < 0) {
+						if(j == 0) {
 							if(tmp & U_COLLISION)
 								break;
 						}
 					}
-					
 					val |= (obj->dx > 0 ? R_COLLISION : L_COLLISION );
 					if(val) {
 						int inX = cx-x;
@@ -99,9 +90,10 @@ check:
 						}
 						if(obj->collCallback((val&(L_COLLISION | R_COLLISION)), inX, cy-y))
 							return val;
+						/* Position may be adjusted, vertical checking will go wrong if we
+						 * don't update 'tile'
+						 */
 						else {
-							toHor = 0;
-							cy = ((obj->y/COLTILE_SZ)*COLTILE_SZ + ((toVer*i)/toCheck)*COLTILE_SZ);
 							cx = ((obj->x/COLTILE_SZ)*COLTILE_SZ);
 							tile = getTile(cx/COLTILE_SZ, cy/COLTILE_SZ, lvl->hdr.width);
 						}
@@ -126,9 +118,6 @@ check:
 						if(obj->dy < 0)
 							inY += COLTILE_SZ;
 						else {
-							/* This is an annoying situation, because there's one tile less
-							when going down aligned. Going up always needs some adjusting of inY.
-							*/
 							if(y % COLTILE_SZ == 0)
 								inY -= COLTILE_SZ;
 						}
