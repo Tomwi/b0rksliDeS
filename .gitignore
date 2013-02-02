@@ -9,3 +9,5 @@ build/*
 *.workspace*
 *.bin
 *.fpkg
+*.exe
+*.db

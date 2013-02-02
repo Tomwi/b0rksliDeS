@@ -59,6 +59,7 @@ include $(FEOSMK)/package.mk
 install: all
 	@mkdir -p $(FEOSDEST)/data/FeOS/bin
 	@cp $(TARGET).fx2 $(FEOSDEST)/data/FeOS/bin/$(TARGET).fx2
+	@echo copying map file
 	@cp $(MAPS)/level0.bks $(FEOSDEST)/level0.bks
 	@grit apptile.png -ftr -fh! -gb -gB16 -gT! -gzl -p! -o $(FEOSDEST)/data/FeOS/gui/$(TARGET).grf
 	@fmantool application.manifest $(FEOSDEST)/data/FeOS/gui/$(TARGET).app
