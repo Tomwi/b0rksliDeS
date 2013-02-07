@@ -23,28 +23,6 @@ OBJECT b0rkwin = {
  */
 #define GRAVITY (1)
 
-int b0rkwinCol(int mask, int inX, int inY)
-{
-	if(b0rkwin.dy) {
-		if(mask & ( U_COLLISION | D_COLLISION )) {
-			b0rkwin.y += inY;
-			b0rkwin.dy = 0;
-			if(jumping && (mask & D_COLLISION))
-				jumping = 0;
-		}
-	}
-	if(b0rkwin.dx) {
-		if(mask & ( R_COLLISION | L_COLLISION)) {
-			b0rkwin.x += inX;
-			b0rkwin.dx = 0;
-		}
-	}
-	// we should be properly aligned by now, stop collision checking
-	if(!b0rkwin.dx && !b0rkwin.dy)
-		return 1;
-	return 0;
-}
-
 void initPlayer(void)
 {
 	int size;
@@ -75,7 +53,7 @@ void updatePlayer(LEVEL* lvl)
 	val = checkMapCollision(&b0rkwin, lvl);
 	b0rkwin.y += b0rkwin.dy;
 	b0rkwin.x += b0rkwin.dx;
-	
+	printf("%d, %d, %d, %d, %d, %d\n", b0rkwin.x, b0rkwin.y, b0rkwin.x%16, b0rkwin.y%16, b0rkwin.dx, b0rkwin.dy);
 	b0rkwin.dy+=GRAVITY;
 
 	if(keysHold & KEY_RIGHT) {
@@ -91,6 +69,12 @@ void updatePlayer(LEVEL* lvl)
 	if(keysPres & KEY_A && !jumping) {
 		b0rkwin.dy = -12;
 		jumping = 1;
+	}
+	if(keysPres & KEY_B){
+		b0rkwin.dy = 10;
+		b0rkwin.dx = 3;
+		b0rkwin.x = 287;
+		b0rkwin.y = 137;
 	}
 }
 

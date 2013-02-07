@@ -14,6 +14,8 @@
 #define R_COLLISION (BIT(2))
 #define L_COLLISION (BIT(3))
 
+/* slope goes up when going left */
+#define SLOPE_COLLISION (BIT(4))
 
 inline int getTile(int x, int y, int width);
 int checkMapCollision(OBJECT* obj, LEVEL* lvl);
